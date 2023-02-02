@@ -568,7 +568,7 @@ void TurtleBot3Core::begin(const char* model_name)
   sensors.calibrationGyro();
 
   //To indicate that the initialization is complete.
-  sensors.makeMelody(6); 
+  sensors.makeMelody(6);
 
   DEBUG_PRINTLN("Begin End...");
 }
