@@ -316,8 +316,6 @@ typedef struct ControlItemVariables{
 }ControlItemVariables;
 
 static ControlItemVariables control_items;
-
-// in raw mode we command velocities directly
 static bool raw_mode = false;
 static int32_t left_raw = 0, right_raw =0; // raw velocities in ticks
 static const int32_t max_raw_velocity=265;  //max raw_velocity
@@ -826,19 +824,26 @@ static void dxl_slave_write_callback_func(uint16_t item_addr, uint8_t &dxl_err_c
       break;
 
     case ADDR_CMD_VEL_LINEAR_X:
-        raw_mode = false;
       goal_velocity_from_cmd[VelocityType::LINEAR] = constrain((float)(control_items.cmd_vel_linear[0]*0.01f), min_linear_velocity, max_linear_velocity);
       break;
+    case ADDR_CMD_VEL_LINEAR_Z:
+        if(control_items.cmd_vel_linear[2] == 1.0)
+        {
+            // use linear z as a flag for raw_mode
+            raw_mode = true;
+        }
+        else
+        {
+            raw_mode = false;
+        }
+      break;
     case ADDR_CMD_VEL_ANGULAR_Z:
-        raw_mode = false;
       goal_velocity_from_cmd[VelocityType::ANGULAR] = constrain((float)(control_items.cmd_vel_angular[2]*0.01f), min_angular_velocity, max_angular_velocity);
       break;
     case ADDR_CMD_VEL_ANGULAR_X:
-        raw_mode = true;
         left_raw = constrain((float)control_items.cmd_vel_angular[0], -max_raw_velocity, max_raw_velocity);
         break;
     case ADDR_CMD_VEL_ANGULAR_Y:
-        raw_mode = true;
         right_raw = constrain((float)control_items.cmd_vel_angular[1], -max_raw_velocity, max_raw_velocity);
         break;
 
