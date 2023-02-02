@@ -317,6 +317,7 @@ typedef struct ControlItemVariables{
 
 static ControlItemVariables control_items;
 static bool raw_mode = false;
+static int ncycles = 0; // number of cycles without a command
 static int32_t left_raw = 0, right_raw =0; // raw velocities in ticks
 static const int32_t max_raw_velocity=265;  //max raw_velocity
 
@@ -630,6 +631,12 @@ void TurtleBot3Core::run()
         }
         else
         {
+            ++ncycles;
+            if(ncycles > 15)
+            {
+                left_raw = 0;
+                right_raw = 0;
+            }
             motor_driver.write_velocity(left_raw, right_raw);
         }
     }
@@ -831,6 +838,7 @@ static void dxl_slave_write_callback_func(uint16_t item_addr, uint8_t &dxl_err_c
         {
             // use linear z as a flag for raw_mode
             raw_mode = true;
+            ncycles = 0;
         }
         else
         {
