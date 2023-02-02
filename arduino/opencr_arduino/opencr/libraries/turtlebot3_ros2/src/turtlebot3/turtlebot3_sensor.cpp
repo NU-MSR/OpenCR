@@ -182,6 +182,7 @@ void Turtlebot3Sensor::makeMelody(uint8_t index)
   const uint16_t NOTE_A4 = 440;
   const uint16_t NOTE_B4 = 494;
   const uint16_t NOTE_C5 = 523;
+  const uint16_t NOTE_F5 = 698;
   //const uint16_t NOTE_C6 = 1047;
 
   const uint8_t OFF         = 0;
@@ -216,9 +217,9 @@ void Turtlebot3Sensor::makeMelody(uint8_t index)
      break;
 
     case LOW_BATTERY:
-      melody_note_[0] = 1000;      melody_duration_[0] = 1;
-      melody_note_[1] = 1000;      melody_duration_[1] = 1;
-      melody_note_[2] = 1000;      melody_duration_[2] = 1;
+      melody_note_[0] = ;      melody_duration_[0] = 1;
+      melody_note_[1] = NOTE_G4;      melody_duration_[1] = 1;
+      melody_note_[2] = NT1000;      melody_duration_[2] = 1;
       melody_note_[3] = 1000;      melody_duration_[3] = 1;
       melody_note_[4] = 0;         melody_duration_[4] = 8;
       melody_note_[5] = 0;         melody_duration_[5] = 8;
@@ -238,7 +239,18 @@ void Turtlebot3Sensor::makeMelody(uint8_t index)
      break;
 
     case BUTTON1:
+        break;
     case BUTTON2:
+        break;
+    case 6:
+      melody_note_[0] = NOTE_F5;      melody_duration_[0] = 2;
+      melody_note_[1] = NOTE_F5;      melody_duration_[1] = 2;
+      melody_note_[2] = NOTE_F5;      melody_duration_[2] = 2;
+      melody_note_[3] = NOTE_F5;       melody_duration_[3] = 2;
+      melody_note_[4] = NOTE_F5;      melody_duration_[4] = 1;
+      melody_note_[5] = NOTE_F5;       melody_duration_[5] = 1;
+      melody_note_[6] = NOTE_F5;      melody_duration_[6] = 2;
+      melody_note_[7] = NOTE_F5;       melody_duration_[7] = 2;
     default:
       return;
   }
