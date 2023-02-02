@@ -217,9 +217,9 @@ void Turtlebot3Sensor::makeMelody(uint8_t index)
      break;
 
     case LOW_BATTERY:
-      melody_note_[0] = ;      melody_duration_[0] = 1;
-      melody_note_[1] = NOTE_G4;      melody_duration_[1] = 1;
-      melody_note_[2] = NT1000;      melody_duration_[2] = 1;
+      melody_note_[0] = 1000;      melody_duration_[0] = 1;
+      melody_note_[1] = 1000;      melody_duration_[1] = 1;
+      melody_note_[2] = 1000;      melody_duration_[2] = 1;
       melody_note_[3] = 1000;      melody_duration_[3] = 1;
       melody_note_[4] = 0;         melody_duration_[4] = 8;
       melody_note_[5] = 0;         melody_duration_[5] = 8;

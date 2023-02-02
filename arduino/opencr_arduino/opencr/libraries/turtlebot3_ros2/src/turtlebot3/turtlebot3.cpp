@@ -287,10 +287,6 @@ typedef struct ControlItemVariables{
   int32_t cmd_vel_angular[3];
   uint32_t profile_acceleration[MortorLocation::MOTOR_NUM_MAX];
 
-    // in raw mode we command velocities directly
-  bool raw_mode = false;
-  int32_t left_raw = 0, right_raw =0; // raw velocities in ticks
-  const int32_t max_raw_vel=265;  //max raw_velocity
 
   bool joint_torque_enable_state;
   joint_position_info_t joint_goal_position;  
@@ -321,6 +317,10 @@ typedef struct ControlItemVariables{
 
 static ControlItemVariables control_items;
 
+// in raw mode we command velocities directly
+static bool raw_mode = false;
+static int32_t left_raw = 0, right_raw =0; // raw velocities in ticks
+static const int32_t max_raw_vel=265;  //max raw_velocity
 
 /*******************************************************************************
 * Definition for TurtleBot3Core 'begin()' function
