@@ -287,6 +287,11 @@ typedef struct ControlItemVariables{
   int32_t cmd_vel_angular[3];
   uint32_t profile_acceleration[MortorLocation::MOTOR_NUM_MAX];
 
+    // in raw mode we command velocities directly
+  bool raw_mode = false;
+  int32_t left_raw = 0, right_raw =0; // raw velocities in ticks
+  const int32_t max_raw_vel=265;  //max raw_velocity
+
   bool joint_torque_enable_state;
   joint_position_info_t joint_goal_position;  
   joint_position_info_t joint_present_position;
@@ -617,10 +622,18 @@ void TurtleBot3Core::run()
     pre_time_to_control_motor = millis();
     if(get_connection_state_with_ros2_node() == false){
       memset(goal_velocity_from_cmd, 0, sizeof(goal_velocity_from_cmd));
+      motor_driver.write_velocity(0, 0);
     }
     update_goal_velocity_from_3values();
     if(get_connection_state_with_motors() == true){
-      motor_driver.control_motors(p_tb3_model_info->wheel_separation, goal_velocity[VelocityType::LINEAR], goal_velocity[VelocityType::ANGULAR]);
+        if(!raw_mode)
+        {
+            motor_driver.control_motors(p_tb3_model_info->wheel_separation, goal_velocity[VelocityType::LINEAR], goal_velocity[VelocityType::ANGULAR]);
+        }
+        else
+        {
+            motor_driver.write_velocity(left_raw, right_raw);
+        }
     }
   }  
 }
@@ -813,12 +826,21 @@ static void dxl_slave_write_callback_func(uint16_t item_addr, uint8_t &dxl_err_c
       break;
 
     case ADDR_CMD_VEL_LINEAR_X:
+        raw_mode = false;
       goal_velocity_from_cmd[VelocityType::LINEAR] = constrain((float)(control_items.cmd_vel_linear[0]*0.01f), min_linear_velocity, max_linear_velocity);
       break;
-
     case ADDR_CMD_VEL_ANGULAR_Z:
+        raw_mode = false;
       goal_velocity_from_cmd[VelocityType::ANGULAR] = constrain((float)(control_items.cmd_vel_angular[2]*0.01f), min_angular_velocity, max_angular_velocity);
-      break;            
+      break;
+    case ADDR_CMD_VEL_ANGULAR_X:
+        raw_mode = true;
+        left_raw = constrain((float)control_items.cmd_vel_angular[0], -max_raw_velocity, max_raw_velocity);
+        break;
+    case ADDR_CMD_VEL_ANGULAR_Y:
+        raw_mode = true;
+        right_raw = constrain((float)control_items.cmd_vel_angular[1], -max_raw_velocity, max_raw_velocity);
+        break;
 
     case ADDR_PROFILE_ACC_L:
     case ADDR_PROFILE_ACC_R:
