@@ -251,6 +251,7 @@ void Turtlebot3Sensor::makeMelody(uint8_t index)
       melody_note_[5] = NOTE_F5;       melody_duration_[5] = 1;
       melody_note_[6] = NOTE_F5;      melody_duration_[6] = 2;
       melody_note_[7] = NOTE_F5;       melody_duration_[7] = 2;
+      break;
     default:
       return;
   }
